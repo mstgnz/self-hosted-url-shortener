@@ -7,6 +7,7 @@
 *.dll
 *.so
 *.dylib
+url-shortener
 
 # Test binary, built with `go test -c`
 *.test
@@ -23,3 +24,17 @@ go.work.sum
 
 # env file
 .env
+
+# SQLite database files
+*.db
+*.db-journal
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
