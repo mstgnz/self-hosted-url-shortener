@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  url-shortener:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: url-shortener
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DB_PATH=/data/data.db
+      - BASE_URL=http://localhost:8080
+    volumes:
+      - url-shortener-data:/data
+    restart: unless-stopped
+
+volumes:
+  url-shortener-data:
+    name: url-shortener-data
