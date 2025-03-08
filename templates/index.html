@@ -1,0 +1,47 @@
+{{ define "content" }}
+<section class="hero">
+    <h2>Shorten Your URLs</h2>
+    <p>Create short, easy-to-share links with our URL shortener.</p>
+</section>
+
+<section class="url-form">
+    <form action="/shorten" method="POST">
+        <div class="form-group">
+            <label for="url">Enter a long URL:</label>
+            <input type="url" id="url" name="url" placeholder="https://example.com/very/long/url/that/needs/shortening" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="custom_code">Custom short code (optional):</label>
+            <input type="text" id="custom_code" name="custom_code" placeholder="e.g., my-link">
+        </div>
+        
+        <button type="submit" class="btn">Shorten URL</button>
+    </form>
+</section>
+
+<section class="features">
+    <h3>Features</h3>
+    <div class="feature-grid">
+        <div class="feature">
+            <h4>Custom URLs</h4>
+            <p>Create memorable, branded short links with custom URLs.</p>
+        </div>
+        
+        <div class="feature">
+            <h4>QR Codes</h4>
+            <p>Generate QR codes for your shortened URLs for easy mobile sharing.</p>
+        </div>
+        
+        <div class="feature">
+            <h4>Click Tracking</h4>
+            <p>Track how many times your shortened URLs have been clicked.</p>
+        </div>
+        
+        <div class="feature">
+            <h4>Self-Hosted</h4>
+            <p>All your data stays on your server, giving you complete control.</p>
+        </div>
+    </div>
+</section>
+{{ end }} 

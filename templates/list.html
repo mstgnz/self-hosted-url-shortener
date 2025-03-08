@@ -1,0 +1,44 @@
+{{ define "list" }}
+<section class="url-list">
+    <h2>My Shortened URLs</h2>
+    
+    {{ if not .urls }}
+    <div class="empty-state">
+        <p>You haven't shortened any URLs yet.</p>
+        <a href="/" class="btn">Shorten a URL</a>
+    </div>
+    {{ else }}
+    <div class="url-table-container">
+        <table class="url-table">
+            <thead>
+                <tr>
+                    <th>Short URL</th>
+                    <th>Original URL</th>
+                    <th>Created</th>
+                    <th>Clicks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .urls }}
+                <tr>
+                    <td>
+                        <a href="{{ $.baseURL }}/{{ .ShortCode }}" target="_blank">{{ $.baseURL }}/{{ .ShortCode }}</a>
+                    </td>
+                    <td class="long-url">
+                        <span title="{{ .LongURL }}">{{ .LongURL }}</span>
+                    </td>
+                    <td>{{ .CreatedAt.Format "Jan 02, 2006" }}</td>
+                    <td>{{ .Clicks }}</td>
+                    <td class="actions">
+                        <a href="/qr/{{ .ShortCode }}" target="_blank" class="btn btn-small" title="View QR Code">QR</a>
+                        <a href="/delete/{{ .ShortCode }}" class="btn btn-small btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this URL?')">Delete</a>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+    {{ end }}
+</section>
+{{ end }} 

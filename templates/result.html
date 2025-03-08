@@ -1,0 +1,48 @@
+{{ define "result" }}
+<section class="result">
+    <h2>URL Shortened Successfully!</h2>
+    
+    <div class="result-card">
+        <div class="result-item">
+            <h3>Your Short URL:</h3>
+            <div class="short-url-container">
+                <input type="text" id="shortUrl" value="{{ .shortURL }}" readonly>
+                <button class="btn copy-btn" onclick="copyToClipboard()">Copy</button>
+            </div>
+        </div>
+        
+        <div class="result-item">
+            <h3>Original URL:</h3>
+            <p class="long-url">{{ .url.LongURL }}</p>
+        </div>
+        
+        <div class="result-item">
+            <h3>QR Code:</h3>
+            <div class="qr-code">
+                <img src="/qr/{{ .url.ShortCode }}" alt="QR Code">
+                <a href="/qr/{{ .url.ShortCode }}" download="qr-{{ .url.ShortCode }}.png" class="btn">Download QR</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <a href="/" class="btn">Shorten Another URL</a>
+        <a href="/urls" class="btn btn-secondary">View All URLs</a>
+    </div>
+</section>
+
+<script>
+function copyToClipboard() {
+    var copyText = document.getElementById("shortUrl");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    
+    var copyBtn = document.querySelector(".copy-btn");
+    copyBtn.textContent = "Copied!";
+    setTimeout(function() {
+        copyBtn.textContent = "Copy";
+    }, 2000);
+}
+</script>
+{{ end }} 
