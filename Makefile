@@ -1,4 +1,4 @@
-.PHONY: build run clean docker-build docker-run docker-stop docker-clean docker-compose-up docker-compose-down help
+.PHONY: build run clean test test-coverage docker-build docker-run docker-stop docker-clean docker-compose-up docker-compose-down help
 
 # Variables
 APP_NAME = url-shortener
@@ -21,6 +21,8 @@ help:
 	@echo "  build              Build the application"
 	@echo "  run                Run the application"
 	@echo "  clean              Clean build artifacts"
+	@echo "  test               Run tests"
+	@echo "  test-coverage      Run tests with coverage"
 	@echo "  docker-build       Build Docker image"
 	@echo "  docker-run         Run Docker container"
 	@echo "  docker-stop        Stop Docker container"
@@ -40,6 +42,15 @@ run: build
 # Clean build artifacts
 clean:
 	rm -f $(APP_NAME)
+	rm -f coverage.out
+
+# Test commands
+test:
+	go test -v ./...
+
+test-coverage:
+	go test -v -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
 
 # Docker commands
 docker-build:

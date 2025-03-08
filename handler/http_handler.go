@@ -16,13 +16,13 @@ import (
 
 // HTTPHandler handles HTTP requests
 type HTTPHandler struct {
-	urlService *service.URLService
+	urlService service.URLServiceInterface
 	baseURL    string
 	templates  *template.Template
 }
 
 // NewHTTPHandler creates a new HTTP handler
-func NewHTTPHandler(urlService *service.URLService, baseURL string, templatesDir string) (*HTTPHandler, error) {
+func NewHTTPHandler(urlService service.URLServiceInterface, baseURL string, templatesDir string) (*HTTPHandler, error) {
 	// Load templates with base template first
 	templates := template.New("")
 

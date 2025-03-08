@@ -12,11 +12,11 @@ import (
 
 // URLService handles the business logic for URL shortening
 type URLService struct {
-	db *database.Database
+	db database.DatabaseInterface
 }
 
 // New creates a new URL service
-func New(db *database.Database) *URLService {
+func New(db database.DatabaseInterface) *URLService {
 	return &URLService{db: db}
 }
 
