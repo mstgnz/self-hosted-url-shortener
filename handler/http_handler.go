@@ -14,6 +14,12 @@ import (
 	"github.com/mstgnz/self-hosted-url-shortener/service"
 )
 
+// Define a custom key type to avoid collisions in context values
+type contextKey string
+
+// Define context keys
+const currentYearKey contextKey = "currentYear"
+
 // HTTPHandler handles HTTP requests
 type HTTPHandler struct {
 	urlService service.URLServiceInterface
@@ -91,16 +97,16 @@ func (h *HTTPHandler) SetupRoutes(router chi.Router) {
 func (h *HTTPHandler) currentYearMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, "currentYear", time.Now().Format("2006"))
+		ctx = context.WithValue(ctx, currentYearKey, time.Now().Format("2006"))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
 // indexHandler handles the index page
 func (h *HTTPHandler) indexHandler(w http.ResponseWriter, r *http.Request) {
-	err := h.templates.ExecuteTemplate(w, "base.html", map[string]interface{}{
+	err := h.templates.ExecuteTemplate(w, "base.html", map[string]any{
 		"baseURL":     h.baseURL,
-		"currentYear": r.Context().Value("currentYear"),
+		"currentYear": r.Context().Value(currentYearKey),
 	})
 
 	if err != nil {
@@ -117,10 +123,10 @@ func (h *HTTPHandler) listURLsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.templates.ExecuteTemplate(w, "base.html", map[string]interface{}{
+	err = h.templates.ExecuteTemplate(w, "base.html", map[string]any{
 		"urls":        urls,
 		"baseURL":     h.baseURL,
-		"currentYear": r.Context().Value("currentYear"),
+		"currentYear": r.Context().Value(currentYearKey),
 	})
 
 	if err != nil {
@@ -152,11 +158,11 @@ func (h *HTTPHandler) shortenURLHandler(w http.ResponseWriter, r *http.Request) 
 
 	shortURL := fmt.Sprintf("%s/%s", h.baseURL, url.ShortCode)
 
-	err = h.templates.ExecuteTemplate(w, "base.html", map[string]interface{}{
+	err = h.templates.ExecuteTemplate(w, "base.html", map[string]any{
 		"url":         url,
 		"shortURL":    shortURL,
 		"baseURL":     h.baseURL,
-		"currentYear": r.Context().Value("currentYear"),
+		"currentYear": r.Context().Value(currentYearKey),
 	})
 
 	if err != nil {
@@ -172,9 +178,9 @@ func (h *HTTPHandler) qrCodeHandler(w http.ResponseWriter, r *http.Request) {
 
 	qrCode, err := h.urlService.GenerateQRCode(shortURL)
 	if err != nil {
-		h.templates.ExecuteTemplate(w, "error.html", map[string]interface{}{
+		h.templates.ExecuteTemplate(w, "error.html", map[string]any{
 			"error":       "Failed to generate QR code",
-			"currentYear": r.Context().Value("currentYear"),
+			"currentYear": r.Context().Value(currentYearKey),
 		})
 		return
 	}
@@ -189,9 +195,9 @@ func (h *HTTPHandler) deleteURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := h.urlService.DeleteURL(code)
 	if err != nil {
-		h.templates.ExecuteTemplate(w, "error.html", map[string]interface{}{
+		h.templates.ExecuteTemplate(w, "error.html", map[string]any{
 			"error":       "Failed to delete URL",
-			"currentYear": r.Context().Value("currentYear"),
+			"currentYear": r.Context().Value(currentYearKey),
 		})
 		return
 	}
@@ -255,7 +261,7 @@ func (h *HTTPHandler) apiShortenURLHandler(w http.ResponseWriter, r *http.Reques
 
 	shortURL := fmt.Sprintf("%s/%s", h.baseURL, url.ShortCode)
 
-	response := map[string]interface{}{
+	response := map[string]any{
 		"id":         url.ID,
 		"short_code": url.ShortCode,
 		"long_url":   url.LongURL,
@@ -276,10 +282,10 @@ func (h *HTTPHandler) apiListURLsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	var response []map[string]interface{}
+	var response []map[string]any
 	for _, url := range urls {
 		shortURL := fmt.Sprintf("%s/%s", h.baseURL, url.ShortCode)
-		response = append(response, map[string]interface{}{
+		response = append(response, map[string]any{
 			"id":         url.ID,
 			"short_code": url.ShortCode,
 			"long_url":   url.LongURL,
@@ -290,7 +296,7 @@ func (h *HTTPHandler) apiListURLsHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{"urls": response})
+	json.NewEncoder(w).Encode(map[string]any{"urls": response})
 }
 
 // apiGetURLHandler handles API URL retrieval requests
@@ -310,7 +316,7 @@ func (h *HTTPHandler) apiGetURLHandler(w http.ResponseWriter, r *http.Request) {
 
 	shortURL := fmt.Sprintf("%s/%s", h.baseURL, url.ShortCode)
 
-	response := map[string]interface{}{
+	response := map[string]any{
 		"id":         url.ID,
 		"short_code": url.ShortCode,
 		"long_url":   url.LongURL,
