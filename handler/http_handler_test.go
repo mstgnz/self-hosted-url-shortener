@@ -175,7 +175,7 @@ func TestAPIHandlers(t *testing.T) {
 		}
 
 		// Parse the response
-		var response map[string]interface{}
+		var response map[string]any
 		if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 			t.Fatalf("Failed to parse response: %v", err)
 		}
@@ -222,7 +222,7 @@ func TestAPIHandlers(t *testing.T) {
 		}
 
 		// Parse the response
-		var response map[string]interface{}
+		var response map[string]any
 		if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 			t.Fatalf("Failed to parse response: %v", err)
 		}
